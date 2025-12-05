@@ -3,20 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Fiberhome Generator</title>
+    
+    <title>Fiberhome Decoder Ultimate</title>
+    <meta name="description" content="Tools dekripsi password WiFi Fiberhome, Login Admin, & QR Connect Otomatis. Gratis & Tanpa Iklan.">
+    <meta property="og:title" content="Fiberhome Decoder Ultimate">
+    <meta property="og:description" content="Cek Password WiFi FH, Info Admin, & QR Code Generator.">
+    <meta property="og:image" content="https://cdn-icons-png.flaticon.com/512/3616/3616927.png">
+    <meta property="og:url" content="https://fh.evan-cloud.my.id">
+    <meta property="og:type" content="website">
+
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#ffffff">
     
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-    
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-
     <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
 
     <style>
-        /* --- CSS VARIABLES --- */
         :root {
             --bg-body: #f4f6f8;
             --bg-card: #ffffff;
@@ -47,16 +55,7 @@
             --info-box-text: #a4f4f9;
         }
 
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-body);
-            color: var(--text-main);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            transition: 0.3s;
-        }
-
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg-body); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; transition: 0.3s; }
         .main-container { flex: 1; display: flex; align-items: center; justify-content: center; padding: 1.5rem; flex-direction: column; }
         .custom-card { background-color: var(--bg-card); border-radius: 16px; box-shadow: var(--shadow); border: none; max-width: 480px; width: 100%; position: relative; overflow: hidden; }
         .card-content { padding: 2.5rem; }
@@ -74,22 +73,11 @@
         .result-text { font-size: 1.5rem; font-weight: 700; color: var(--primary); word-break: break-all; line-height: 1.2;}
         .result-placeholder { color: var(--text-muted); font-size: 0.9rem; }
 
-        /* INFO ADMIN STYLE */
-        .info-admin {
-            background-color: var(--info-box-bg);
-            color: var(--info-box-text);
-            border-radius: 10px;
-            padding: 1rem;
-            margin-top: 1.5rem;
-            display: none; 
-            border-left: 4px solid var(--primary);
-            font-size: 0.85rem;
-        }
+        .info-admin { background-color: var(--info-box-bg); color: var(--info-box-text); border-radius: 10px; padding: 1rem; margin-top: 1.5rem; display: none; border-left: 4px solid var(--primary); font-size: 0.85rem; }
         .admin-select-wrapper { margin-bottom: 0.5rem; }
         .select { width: 100%; }
         .select select { width: 100%; font-family: 'Inter', sans-serif; font-size: 0.85rem; height: 2.5em; }
 
-        /* NETWORK STATUS */
         .network-status-box { background: var(--bg-body); border-radius: 12px; padding: 1rem; text-align: center; border: 1px solid var(--input-border); }
         .box-status { background: var(--bg-card); border: 1px solid var(--input-border); border-radius: 8px; padding: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; color: var(--text-main); font-weight: 600; }
         .status-online { color: #48c774; }
@@ -104,26 +92,24 @@
         .history-ssid { font-weight: 600; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 60%; }
         .history-pass { font-family: monospace; color: var(--primary); background: var(--result-bg); padding: 4px 8px; border-radius: 6px; cursor: pointer; font-size: 0.85rem; }
 
-        .trakteer-btn { background-color: #be1e2d !important; color: white !important; margin-top: 1rem; border-radius: 50px; border: none; box-shadow: 0 4px 6px rgba(190, 30, 45, 0.2); height: 3em; }
+        .trakteer-btn { background-color: #be1e2d !important; color: white !important; margin-top: 1rem; border-radius: 50px; border: none; box-shadow: 0 4px 6px rgba(190, 30, 45, 0.2); height: 3em; transition: all 0.3s ease; }
+        .trakteer-btn:hover { transform: translateY(-3px); box-shadow: 0 6px 12px rgba(190, 30, 45, 0.3); }
 
-        /* VISITOR COUNTER & LIVE DOT */
+        /* ANIMASI HEARTBEAT TOMBOL TRAKTEER */
+        .trakteer-icon { animation: heartbeat 1.5s infinite; }
+        
+        @keyframes heartbeat {
+            0% { transform: scale(1); }
+            14% { transform: scale(1.3); }
+            28% { transform: scale(1); }
+            42% { transform: scale(1.3); }
+            70% { transform: scale(1); }
+        }
+
         .visitor-stats { margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--input-border); font-size: 0.8rem; color: var(--text-muted); text-align: center; display: flex; justify-content: center; align-items: center; gap: 6px; }
         
-        .live-dot {
-            height: 8px;
-            width: 8px;
-            background-color: #48c774;
-            border-radius: 50%;
-            display: inline-block;
-            box-shadow: 0 0 0 0 rgba(72, 199, 116, 0.7);
-            animation: pulse-green 2s infinite;
-        }
-
-        @keyframes pulse-green {
-            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(72, 199, 116, 0.7); }
-            70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(72, 199, 116, 0); }
-            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(72, 199, 116, 0); }
-        }
+        .live-dot { height: 8px; width: 8px; background-color: #48c774; border-radius: 50%; display: inline-block; box-shadow: 0 0 0 0 rgba(72, 199, 116, 0.7); animation: pulse-green 2s infinite; }
+        @keyframes pulse-green { 0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(72, 199, 116, 0.7); } 70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(72, 199, 116, 0); } 100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(72, 199, 116, 0); } }
 
         .theme-switch-wrapper { position: absolute; top: 15px; right: 15px; z-index: 10; }
         .theme-icon { color: var(--text-main); font-size: 1.4rem; cursor: pointer; padding: 8px; border-radius: 50%; background: var(--bg-card); box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
@@ -137,9 +123,6 @@
             .title.is-4 { font-size: 1.3rem; }
             .subtitle.is-6 { font-size: 0.85rem; margin-bottom: 1.5rem !important; }
         }
-        
-        @keyframes fadein { from {bottom: 0; opacity: 0;} to {bottom: 30px; opacity: 1;} }
-        @keyframes fadeout { from {bottom: 30px; opacity: 1;} to {bottom: 0; opacity: 0;} }
     </style>
 </head>
 <body>
@@ -161,9 +144,12 @@
 
                 <div class="field">
                     <label class="label has-text-grey is-size-7">MASUKKAN SSID</label>
-                    <div class="control has-icons-left">
-                        <input class="input" type="text" id="kodeInput" placeholder="Contoh: fh_94e640_5G" onkeyup="if(event.keyCode === 13) konversi();" autocomplete="off" spellcheck="false">
+                    <div class="control has-icons-left has-icons-right">
+                        <input class="input" type="text" id="kodeInput" placeholder="Contoh: fh_94e640_5G" onkeyup="if(event.keyCode === 13) konversi();" autocomplete="off" spellcheck="false" style="padding-right: 40px;">
                         <span class="icon is-small is-left"><i class="material-icons">wifi</i></span>
+                        <span class="icon is-small is-right" style="pointer-events: auto; cursor: pointer;" onclick="pasteText()" title="Tempel Teks">
+                            <i class="material-icons has-text-grey">content_paste</i>
+                        </span>
                     </div>
                 </div>
 
@@ -185,7 +171,6 @@
                         <span class="has-text-weight-bold">ℹ️ Info Login Router</span>
                         <a href="http://192.168.1.1" target="_blank" id="btn-open-panel" class="tag is-link is-light" style="text-decoration: none;">Buka Panel ↗</a>
                     </div>
-                    
                     <div class="admin-select-wrapper">
                         <div class="select is-small">
                             <select id="ip-selector" onchange="updateAdminPanel()">
@@ -194,7 +179,6 @@
                             </select>
                         </div>
                     </div>
-
                     <div class="columns is-mobile is-gapless mt-2">
                         <div class="column">User: <b>user</b></div>
                         <div class="column">Pass: <b>user1234</b></div>
@@ -219,7 +203,7 @@
                         <div class="column is-12 mt-1">
                             <a href="https://fast.com" target="_blank" class="button is-small is-fullwidth is-outlined" style="border-color: var(--input-border); color: var(--text-muted); border-radius: 8px;">
                                 <span class="icon is-small mr-1"><i class="material-icons">speed</i></span>
-                                Test Kecepatan (Fast.com)
+                                Test Kecepatan
                             </a>
                         </div>
                     </div>
@@ -228,19 +212,24 @@
                 <div id="qrcode-container">
                     <p class="is-size-7 has-text-grey has-text-centered mb-2">Scan untuk Connect</p>
                     <div id="qrcode"></div>
+                    <button class="button is-small is-rounded is-light mt-3" onclick="downloadQR()">
+                        <span class="icon is-small mr-1"><i class="material-icons">download</i></span>
+                        Simpan Gambar
+                    </button>
                 </div>
 
                 <div class="has-text-centered mt-6 pt-4" style="border-top: 1px solid var(--input-border);">
                     <p class="is-size-7 has-text-grey mb-3">Support developer untuk beli kopi ☕</p>
+                    
                     <a href="https://trakteer.id/evanmardiansyah" target="_blank" class="button trakteer-btn is-fullwidth">
-                        <span class="icon is-small mr-1"><i class="material-icons">favorite</i></span>
+                        <span class="icon is-small mr-1 trakteer-icon"><i class="material-icons">favorite</i></span>
                         <span>Traktir Cendol</span>
                     </a>
                     
                     <div class="visitor-stats">
                         <div class="live-dot" title="Live Update"></div>
                         <span id="busuanzi_container_site_uv" style="display:none;">
-                            Total Pengunjung: <span id="busuanzi_value_site_uv" class="has-text-weight-bold">...</span>
+                            Pengunjung Unik: <span id="busuanzi_value_site_uv" class="has-text-weight-bold">...</span>
                         </span>
                     </div>
                 </div>
@@ -293,11 +282,41 @@
         confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, colors: ['#3273dc', '#00d1b2', '#ffdd57', '#ff3860'], disableForReducedMotion: true });
     }
 
-    // --- AUTO UPDATE COUNTER LOGIC (20 DETIK) ---
+    function downloadQR() {
+        const qrCanvas = document.querySelector('#qrcode canvas');
+        const qrImg = document.querySelector('#qrcode img');
+        
+        let url = "";
+        if (qrCanvas) { url = qrCanvas.toDataURL("image/png"); }
+        else if (qrImg) { url = qrImg.src; }
+
+        if (url) {
+            const link = document.createElement('a');
+            link.download = 'wifi-qrcode.png';
+            link.href = url;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            showToastMessage("QR Code disimpan! 📥");
+        } else {
+            showToastMessage("Gagal menyimpan gambar ⚠️");
+        }
+    }
+
+    async function pasteText() {
+        try {
+            const text = await navigator.clipboard.readText();
+            document.getElementById('kodeInput').value = text;
+            showToastMessage("Ditempel! 📋");
+            konversi();
+        } catch (err) {
+            showToastMessage("Gagal paste (Izin browser diperlukan)");
+        }
+    }
+
     setInterval(function() {
         var oldScript = document.querySelector('script[src*="busuanzi"]');
         if (oldScript) oldScript.remove();
-
         var newScript = document.createElement("script");
         newScript.src = "//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js";
         newScript.async = true;
@@ -307,8 +326,7 @@
 
     function updateAdminPanel() {
         const selectedIP = document.getElementById('ip-selector').value;
-        const btnPanel = document.getElementById('btn-open-panel');
-        btnPanel.href = "http://" + selectedIP;
+        document.getElementById('btn-open-panel').href = "http://" + selectedIP;
     }
 
     function generateQR(ssid, password) {
@@ -392,5 +410,3 @@
 
 </body>
 </html>
-
-
