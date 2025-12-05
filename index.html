@@ -10,7 +10,9 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
     <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
 
     <style>
@@ -72,7 +74,7 @@
         .result-text { font-size: 1.5rem; font-weight: 700; color: var(--primary); word-break: break-all; line-height: 1.2;}
         .result-placeholder { color: var(--text-muted); font-size: 0.9rem; }
 
-        /* INFO ADMIN STYLE UPDATED */
+        /* INFO ADMIN STYLE */
         .info-admin {
             background-color: var(--info-box-bg);
             color: var(--info-box-text);
@@ -104,7 +106,24 @@
 
         .trakteer-btn { background-color: #be1e2d !important; color: white !important; margin-top: 1rem; border-radius: 50px; border: none; box-shadow: 0 4px 6px rgba(190, 30, 45, 0.2); height: 3em; }
 
+        /* VISITOR COUNTER & LIVE DOT */
         .visitor-stats { margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--input-border); font-size: 0.8rem; color: var(--text-muted); text-align: center; display: flex; justify-content: center; align-items: center; gap: 6px; }
+        
+        .live-dot {
+            height: 8px;
+            width: 8px;
+            background-color: #48c774;
+            border-radius: 50%;
+            display: inline-block;
+            box-shadow: 0 0 0 0 rgba(72, 199, 116, 0.7);
+            animation: pulse-green 2s infinite;
+        }
+
+        @keyframes pulse-green {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(72, 199, 116, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(72, 199, 116, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(72, 199, 116, 0); }
+        }
 
         .theme-switch-wrapper { position: absolute; top: 15px; right: 15px; z-index: 10; }
         .theme-icon { color: var(--text-main); font-size: 1.4rem; cursor: pointer; padding: 8px; border-radius: 50%; background: var(--bg-card); box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
@@ -217,10 +236,11 @@
                         <span class="icon is-small mr-1"><i class="material-icons">favorite</i></span>
                         <span>Traktir Cendol</span>
                     </a>
+                    
                     <div class="visitor-stats">
-                        <span class="icon is-small"><i class="material-icons" style="font-size: 16px;">groups</i></span>
-                        <span id="busuanzi_container_site_pv" style="display:none;">
-                            Total Pengunjung: <span id="busuanzi_value_site_pv" class="has-text-weight-bold">...</span>
+                        <div class="live-dot" title="Live Update"></div>
+                        <span id="busuanzi_container_site_uv" style="display:none;">
+                            Pengunjung Unik: <span id="busuanzi_value_site_uv" class="has-text-weight-bold">...</span>
                         </span>
                     </div>
                 </div>
@@ -273,11 +293,21 @@
         confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, colors: ['#3273dc', '#00d1b2', '#ffdd57', '#ff3860'], disableForReducedMotion: true });
     }
 
-    // --- FITUR ADMIN SELECTOR (BARU) ---
+    // --- AUTO UPDATE COUNTER LOGIC (20 DETIK) ---
+    setInterval(function() {
+        var oldScript = document.querySelector('script[src*="busuanzi"]');
+        if (oldScript) oldScript.remove();
+
+        var newScript = document.createElement("script");
+        newScript.src = "//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js";
+        newScript.async = true;
+        newScript.style.display = "none";
+        document.body.appendChild(newScript);
+    }, 20000); 
+
     function updateAdminPanel() {
         const selectedIP = document.getElementById('ip-selector').value;
         const btnPanel = document.getElementById('btn-open-panel');
-        // Update Link Tombol
         btnPanel.href = "http://" + selectedIP;
     }
 
