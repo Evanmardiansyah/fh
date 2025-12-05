@@ -10,13 +10,11 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-    
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-
     <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
 
     <style>
-        /* --- CSS VARIABLES & THEME ENGINE --- */
+        /* --- CSS VARIABLES --- */
         :root {
             --bg-body: #f4f6f8;
             --bg-card: #ffffff;
@@ -28,7 +26,6 @@
             --input-border: #dfe6e9;
             --shadow: 0 4px 20px rgba(0,0,0,0.08);
             --result-bg: #f9fafb;
-            --transition-speed: 0.3s;
             --info-box-bg: #eefffa;
             --info-box-text: #0e3f43;
         }
@@ -48,7 +45,6 @@
             --info-box-text: #a4f4f9;
         }
 
-        /* --- GLOBAL STYLE --- */
         body {
             font-family: 'Inter', sans-serif;
             background-color: var(--bg-body);
@@ -56,78 +52,27 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            transition: all var(--transition-speed);
+            transition: 0.3s;
         }
 
-        /* Container Setup */
-        .main-container { 
-            flex: 1; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            padding: 1.5rem; 
-            flex-direction: column; 
-        }
-        
-        .custom-card { 
-            background-color: var(--bg-card); 
-            border-radius: 16px; 
-            box-shadow: var(--shadow); 
-            border: none; 
-            max-width: 480px; 
-            width: 100%; 
-            transition: all var(--transition-speed); 
-            position: relative;
-            overflow: hidden; 
-        }
-        
+        .main-container { flex: 1; display: flex; align-items: center; justify-content: center; padding: 1.5rem; flex-direction: column; }
+        .custom-card { background-color: var(--bg-card); border-radius: 16px; box-shadow: var(--shadow); border: none; max-width: 480px; width: 100%; position: relative; overflow: hidden; }
         .card-content { padding: 2.5rem; }
-        
-        .title { color: var(--text-main) !important; transition: color 0.3s; }
-        .subtitle { color: var(--text-muted) !important; transition: color 0.3s; line-height: 1.5; }
+        .title { color: var(--text-main) !important; }
+        .subtitle { color: var(--text-muted) !important; line-height: 1.5; }
 
-        /* Input Styling */
-        .input { 
-            background-color: var(--input-bg); 
-            border-color: var(--input-border); 
-            color: var(--text-main); 
-            height: 3.2em; 
-            border-radius: 10px; 
-            font-family: monospace; 
-            font-size: 16px; 
-        }
-        .input:focus { border-color: var(--primary); box-shadow: 0 0 0 2px rgba(50, 115, 220, 0.2); }
+        .input, .select select { background-color: var(--input-bg); border-color: var(--input-border); color: var(--text-main); height: 3.2em; border-radius: 10px; font-family: monospace; font-size: 16px; }
+        .input:focus, .select select:focus { border-color: var(--primary); box-shadow: 0 0 0 2px rgba(50, 115, 220, 0.2); }
         .input::placeholder { color: var(--text-muted); opacity: 0.7; font-family: 'Inter', sans-serif; font-size: 14px;}
 
-        /* Button Styling */
-        .button.is-primary { 
-            background-color: var(--primary); 
-            border-radius: 10px; 
-            height: 3.2em; 
-            font-weight: 600; 
-            border: none; 
-            font-size: 1rem;
-        }
+        .button.is-primary { background-color: var(--primary); border-radius: 10px; height: 3.2em; font-weight: 600; border: none; font-size: 1rem; }
         .button.is-primary:hover { background-color: var(--primary-hover); }
-        .button.is-primary:active { transform: scale(0.98); }
 
-        /* Result Box */
-        .result-box { 
-            background-color: var(--result-bg); 
-            border: 1px dashed var(--input-border); 
-            border-radius: 10px; 
-            padding: 1.5rem; 
-            margin-top: 2rem; 
-            text-align: center; 
-            cursor: pointer; 
-            transition: all var(--transition-speed); 
-            user-select: none; 
-        }
-        .result-box:active { transform: scale(0.99); background-color: rgba(0,0,0,0.02); }
+        .result-box { background-color: var(--result-bg); border: 1px dashed var(--input-border); border-radius: 10px; padding: 1.5rem; margin-top: 2rem; text-align: center; cursor: pointer; user-select: none; }
         .result-text { font-size: 1.5rem; font-weight: 700; color: var(--primary); word-break: break-all; line-height: 1.2;}
         .result-placeholder { color: var(--text-muted); font-size: 0.9rem; }
 
-        /* Info Admin Box */
+        /* INFO ADMIN STYLE UPDATED */
         .info-admin {
             background-color: var(--info-box-bg);
             color: var(--info-box-text);
@@ -138,102 +83,44 @@
             border-left: 4px solid var(--primary);
             font-size: 0.85rem;
         }
+        .admin-select-wrapper { margin-bottom: 0.5rem; }
+        .select { width: 100%; }
+        .select select { width: 100%; font-family: 'Inter', sans-serif; font-size: 0.85rem; height: 2.5em; }
 
-        /* QR Code */
-        #qrcode-container {
-            display: none;
-            margin-top: 1.5rem;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            padding: 1rem;
-            background: white; 
-            border-radius: 12px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            max-width: 200px;
-            margin-left: auto;
-            margin-right: auto;
-        }
+        /* NETWORK STATUS */
+        .network-status-box { background: var(--bg-body); border-radius: 12px; padding: 1rem; text-align: center; border: 1px solid var(--input-border); }
+        .box-status { background: var(--bg-card); border: 1px solid var(--input-border); border-radius: 8px; padding: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; color: var(--text-main); font-weight: 600; }
+        .status-online { color: #48c774; }
+        .status-offline { color: #f14668; }
 
-        /* History */
+        #qrcode-container { display: none; margin-top: 1.5rem; justify-content: center; align-items: center; flex-direction: column; padding: 1rem; background: white; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); max-width: 200px; margin-left: auto; margin-right: auto; }
+
         .history-section { margin-top: 2rem; width: 100%; max-width: 480px; }
         .history-card { background-color: var(--bg-card); border-radius: 12px; padding: 0.5rem; box-shadow: var(--shadow); }
-        .history-item { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            padding: 12px 15px; 
-            border-bottom: 1px solid var(--input-border); 
-            font-size: 0.9rem; 
-        }
+        .history-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 15px; border-bottom: 1px solid var(--input-border); font-size: 0.9rem; }
         .history-item:last-child { border-bottom: none; }
-        .history-ssid { 
-            font-weight: 600; 
-            color: var(--text-main); 
-            white-space: nowrap; 
-            overflow: hidden; 
-            text-overflow: ellipsis; 
-            max-width: 60%; 
-        }
-        .history-pass { 
-            font-family: monospace; 
-            color: var(--primary); 
-            background: var(--result-bg); 
-            padding: 4px 8px; 
-            border-radius: 6px; 
-            cursor: pointer; 
-            font-size: 0.85rem;
-        }
+        .history-ssid { font-weight: 600; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 60%; }
+        .history-pass { font-family: monospace; color: var(--primary); background: var(--result-bg); padding: 4px 8px; border-radius: 6px; cursor: pointer; font-size: 0.85rem; }
 
-        /* Trakteer */
-        .trakteer-btn { 
-            background-color: #be1e2d !important; 
-            color: white !important; 
-            margin-top: 1rem; 
-            border-radius: 50px; 
-            border: none; 
-            box-shadow: 0 4px 6px rgba(190, 30, 45, 0.2); 
-            height: 3em;
-        }
+        .trakteer-btn { background-color: #be1e2d !important; color: white !important; margin-top: 1rem; border-radius: 50px; border: none; box-shadow: 0 4px 6px rgba(190, 30, 45, 0.2); height: 3em; }
 
-        /* Visitor Counter Style */
-        .visitor-stats {
-            margin-top: 1.5rem;
-            padding-top: 1rem;
-            /* Garis pemisah tipis biar rapi */
-            border-top: 1px solid var(--input-border); 
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            text-align: center;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 6px;
-        }
-        
+        .visitor-stats { margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--input-border); font-size: 0.8rem; color: var(--text-muted); text-align: center; display: flex; justify-content: center; align-items: center; gap: 6px; }
+
         .theme-switch-wrapper { position: absolute; top: 15px; right: 15px; z-index: 10; }
         .theme-icon { color: var(--text-main); font-size: 1.4rem; cursor: pointer; padding: 8px; border-radius: 50%; background: var(--bg-card); box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
 
-        /* Toast */
         #toast { visibility: hidden; min-width: 250px; margin-left: -125px; background-color: var(--text-main); color: var(--bg-card); text-align: center; border-radius: 50px; padding: 12px 24px; position: fixed; z-index: 100; left: 50%; bottom: 30px; font-weight: 600; box-shadow: 0 5px 15px rgba(0,0,0,0.2); font-size: 0.9rem; }
         #toast.show { visibility: visible; animation: fadein 0.5s, fadeout 0.5s 2.5s; }
 
-        /* --- MOBILE SPECIFIC CSS --- */
         @media screen and (max-width: 768px) {
             .main-container { padding: 1rem; }
-            .custom-card { box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
             .card-content { padding: 1.5rem; }
             .title.is-4 { font-size: 1.3rem; }
             .subtitle.is-6 { font-size: 0.85rem; margin-bottom: 1.5rem !important; }
-            .input, .button { font-size: 1rem; }
-            .result-text { font-size: 1.3rem; }
-            #qrcode-container { padding: 0.8rem; }
         }
         
-        /* Animasi */
         @keyframes fadein { from {bottom: 0; opacity: 0;} to {bottom: 30px; opacity: 1;} }
         @keyframes fadeout { from {bottom: 30px; opacity: 1;} to {bottom: 0; opacity: 0;} }
-
     </style>
 </head>
 <body>
@@ -277,14 +164,45 @@
                 <div id="admin-info" class="info-admin">
                     <div class="is-flex is-justify-content-space-between is-align-items-center mb-2">
                         <span class="has-text-weight-bold">ℹ️ Info Login Router</span>
-                        <a href="http://192.168.1.1" target="_blank" class="tag is-link is-light" style="text-decoration: none;">Buka Panel ↗</a>
+                        <a href="http://192.168.1.1" target="_blank" id="btn-open-panel" class="tag is-link is-light" style="text-decoration: none;">Buka Panel ↗</a>
                     </div>
-                    <div class="columns is-mobile is-gapless mb-0">
-                        <div class="column">IP: <b>192.168.1.1</b></div>
+                    
+                    <div class="admin-select-wrapper">
+                        <div class="select is-small">
+                            <select id="ip-selector" onchange="updateAdminPanel()">
+                                <option value="192.168.1.1">IP: 192.168.1.1 (Default)</option>
+                                <option value="192.168.100.1">IP: 192.168.100.1 (Alt)</option>
+                            </select>
+                        </div>
                     </div>
-                    <div class="columns is-mobile is-gapless">
+
+                    <div class="columns is-mobile is-gapless mt-2">
                         <div class="column">User: <b>user</b></div>
                         <div class="column">Pass: <b>user1234</b></div>
+                    </div>
+                </div>
+
+                <div class="network-status-box mt-4">
+                    <p class="is-size-7 has-text-weight-bold has-text-grey mb-2" style="letter-spacing: 1px;">STATUS JARINGAN ANDA</p>
+                    <div class="columns is-mobile is-multiline is-variable is-1">
+                        <div class="column is-6">
+                            <div class="box-status">
+                                <span class="icon is-small mb-1"><i class="material-icons" id="icon-status">wifi</i></span>
+                                <span class="is-size-7" id="text-status">Mengecek...</span>
+                            </div>
+                        </div>
+                        <div class="column is-6">
+                            <div class="box-status">
+                                <span class="icon is-small mb-1"><i class="material-icons">public</i></span>
+                                <span class="is-size-7" id="ip-address">Loading...</span>
+                            </div>
+                        </div>
+                        <div class="column is-12 mt-1">
+                            <a href="https://fast.com" target="_blank" class="button is-small is-fullwidth is-outlined" style="border-color: var(--input-border); color: var(--text-muted); border-radius: 8px;">
+                                <span class="icon is-small mr-1"><i class="material-icons">speed</i></span>
+                                Test Kecepatan (Fast.com)
+                            </a>
+                        </div>
                     </div>
                 </div>
 
@@ -295,12 +213,10 @@
 
                 <div class="has-text-centered mt-6 pt-4" style="border-top: 1px solid var(--input-border);">
                     <p class="is-size-7 has-text-grey mb-3">Support developer untuk beli kopi ☕</p>
-                    
                     <a href="https://trakteer.id/USERNAME_KAMU" target="_blank" class="button trakteer-btn is-fullwidth">
                         <span class="icon is-small mr-1"><i class="material-icons">favorite</i></span>
                         <span>Traktir Cendol</span>
                     </a>
-
                     <div class="visitor-stats">
                         <span class="icon is-small"><i class="material-icons" style="font-size: 16px;">groups</i></span>
                         <span id="busuanzi_container_site_pv" style="display:none;">
@@ -317,39 +233,26 @@
                 <span class="is-size-7 has-text-grey">Riwayat Pencarian</span>
                 <span class="is-size-7 has-text-danger is-clickable" style="cursor:pointer;" onclick="clearHistory()">Hapus</span>
             </div>
-            <div class="history-card" id="historyList">
-                </div>
+            <div class="history-card" id="historyList"></div>
         </div>
     </div>
 
     <div id="toast">Password berhasil disalin! 👌</div>
 
 <script>
-    // --- LOGIC UTAMA ---
-    const PETA_DARI_KODE = {
-        'a': '5', 'b': '4', 'c': '3', 'd': '2', 'e': '1', 'f': '0',
-        '6': '9', '7': '8', '8': '7', '9': '6'
-    };
+    const PETA_DARI_KODE = {'a': '5', 'b': '4', 'c': '3', 'd': '2', 'e': '1', 'f': '0', '6': '9', '7': '8', '8': '7', '9': '6'};
 
     function konversi() {
         const inputElem = document.getElementById('kodeInput');
         const inputText = inputElem.value.trim();
-        
-        // Hapus focus keyboard di HP setelah enter
         inputElem.blur();
 
-        if (!inputText) {
-            showToastMessage("⚠️ Masukkan SSID dulu ya!");
-            return;
-        }
+        if (!inputText) { showToastMessage("⚠️ Masukkan SSID dulu ya!"); return; }
 
         let kodeLower = inputText.toLowerCase();
         let kodeInti = kodeLower.replace('fh_', '');
-        
         const underscoreIndex = kodeInti.indexOf('_');
-        if (underscoreIndex !== -1) {
-            kodeInti = kodeInti.substring(0, underscoreIndex);
-        }
+        if (underscoreIndex !== -1) kodeInti = kodeInti.substring(0, underscoreIndex);
 
         let kodeDikonversi = '';
         for (let i = 0; i < kodeInti.length; i++) {
@@ -359,47 +262,61 @@
         
         let hasilPassword = 'wlan' + kodeDikonversi;
         
-        // Update UI
         document.getElementById('hasil-placeholder').style.display = 'none';
         document.getElementById('hasil').textContent = hasilPassword;
         document.getElementById('admin-info').style.display = 'block';
 
         generateQR(inputText, hasilPassword);
         addToHistory(inputText, hasilPassword);
-
-        // Scroll halus ke hasil (Penting buat HP)
+        
         document.getElementById('hasil-container').scrollIntoView({behavior: "smooth", block: "center"});
+        confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, colors: ['#3273dc', '#00d1b2', '#ffdd57', '#ff3860'], disableForReducedMotion: true });
+    }
 
-        // Efek Confetti
-        confetti({
-            particleCount: 150,
-            spread: 70,
-            origin: { y: 0.6 },
-            colors: ['#3273dc', '#00d1b2', '#ffdd57', '#ff3860'],
-            disableForReducedMotion: true
-        });
+    // --- FITUR ADMIN SELECTOR (BARU) ---
+    function updateAdminPanel() {
+        const selectedIP = document.getElementById('ip-selector').value;
+        const btnPanel = document.getElementById('btn-open-panel');
+        // Update Link Tombol
+        btnPanel.href = "http://" + selectedIP;
     }
 
     function generateQR(ssid, password) {
         const qrContainer = document.getElementById('qrcode');
         const qrWrapper = document.getElementById('qrcode-container');
-        
         qrContainer.innerHTML = ''; 
         qrWrapper.style.display = 'flex'; 
-
-        const wifiString = `WIFI:S:${ssid};T:WPA;P:${password};;`;
-
-        new QRCode(qrContainer, {
-            text: wifiString,
-            width: 150,
-            height: 150,
-            colorDark : "#000000",
-            colorLight : "#ffffff",
-            correctLevel : QRCode.CorrectLevel.L // Level L biar QR lebih simple & gampang scan
-        });
+        new QRCode(qrContainer, { text: `WIFI:S:${ssid};T:WPA;P:${password};;`, width: 150, height: 150, correctLevel : QRCode.CorrectLevel.L });
     }
 
-    // --- HISTORY SYSTEM ---
+    function updateOnlineStatus() {
+        const statusText = document.getElementById('text-status');
+        const statusIcon = document.getElementById('icon-status');
+        if (navigator.onLine) {
+            statusText.textContent = "Online";
+            statusText.className = "is-size-7 status-online";
+            statusIcon.className = "material-icons status-online";
+            statusIcon.textContent = "wifi";
+        } else {
+            statusText.textContent = "Offline";
+            statusText.className = "is-size-7 status-offline";
+            statusIcon.className = "material-icons status-offline";
+            statusIcon.textContent = "wifi_off";
+        }
+    }
+
+    function fetchIP() {
+        fetch('https://api.ipify.org?format=json')
+            .then(response => response.json())
+            .then(data => { document.getElementById('ip-address').textContent = data.ip; })
+            .catch(error => { document.getElementById('ip-address').textContent = "-"; });
+    }
+
+    window.addEventListener('online', updateOnlineStatus);
+    window.addEventListener('offline', updateOnlineStatus);
+    updateOnlineStatus();
+    fetchIP();
+
     function addToHistory(ssid, password) {
         let history = JSON.parse(localStorage.getItem('wifiHistory')) || [];
         history = history.filter(item => item.ssid !== ssid);
@@ -413,58 +330,23 @@
         let history = JSON.parse(localStorage.getItem('wifiHistory')) || [];
         const historyList = document.getElementById('historyList');
         const historySection = document.getElementById('historySection');
-
-        if (history.length === 0) {
-            historySection.style.display = 'none';
-            return;
-        }
-
+        if (history.length === 0) { historySection.style.display = 'none'; return; }
         historySection.style.display = 'block';
         historyList.innerHTML = '';
-
         history.forEach(item => {
-            historyList.innerHTML += `
-                <div class="history-item">
-                    <span class="history-ssid">${item.ssid}</span>
-                    <span class="history-pass" onclick="copyText('${item.password}')" title="Klik Copy">${item.password}</span>
-                </div>
-            `;
+            historyList.innerHTML += `<div class="history-item"><span class="history-ssid">${item.ssid}</span><span class="history-pass" onclick="copyText('${item.password}')" title="Klik Copy">${item.password}</span></div>`;
         });
     }
     
-    function clearHistory() {
-        localStorage.removeItem('wifiHistory');
-        renderHistory();
-        showToastMessage("Riwayat dihapus 🗑️");
-    }
+    function clearHistory() { localStorage.removeItem('wifiHistory'); renderHistory(); showToastMessage("Riwayat dihapus 🗑️"); }
+    function salinHasil() { const hasilTeks = document.getElementById('hasil').textContent; if (hasilTeks) copyText(hasilTeks); }
+    function copyText(text) { navigator.clipboard.writeText(text).then(() => { showToastMessage("Password berhasil disalin! 👌"); }); }
+    function showToastMessage(msg) { const toast = document.getElementById("toast"); toast.textContent = msg; toast.className = "show"; setTimeout(() => { toast.className = toast.className.replace("show", ""); }, 3000); }
 
-    // --- UTILITIES ---
-    function salinHasil() {
-        const hasilTeks = document.getElementById('hasil').textContent;
-        if (hasilTeks) copyText(hasilTeks);
-    }
-
-    function copyText(text) {
-        navigator.clipboard.writeText(text).then(() => {
-            showToastMessage("Password berhasil disalin! 👌");
-        });
-    }
-
-    function showToastMessage(msg) {
-        const toast = document.getElementById("toast");
-        toast.textContent = msg;
-        toast.className = "show";
-        setTimeout(() => { toast.className = toast.className.replace("show", ""); }, 3000);
-    }
-
-    // --- DARK MODE ENGINE ---
     const themeIcon = document.getElementById('themeIcon');
     const htmlEl = document.documentElement;
     const currentTheme = localStorage.getItem('theme');
-    if (currentTheme) { 
-        htmlEl.setAttribute('data-theme', currentTheme); 
-        updateIcon(currentTheme); 
-    }
+    if (currentTheme) { htmlEl.setAttribute('data-theme', currentTheme); updateIcon(currentTheme); }
 
     function toggleTheme() {
         let theme = htmlEl.getAttribute('data-theme');
@@ -473,12 +355,8 @@
         localStorage.setItem('theme', newTheme);
         updateIcon(newTheme);
     }
+    function updateIcon(theme) { themeIcon.textContent = theme === 'dark' ? 'light_mode' : 'dark_mode'; }
 
-    function updateIcon(theme) {
-        themeIcon.textContent = theme === 'dark' ? 'light_mode' : 'dark_mode';
-    }
-
-    // Init load history
     renderHistory();
 </script>
 
